@@ -347,6 +347,25 @@ const legacyLoadComponentConfig = (directoryPath) => {
   return componentFile
 }
 
+const possibleConfigurationFiles = [
+  'serverless.yml',
+  'serverless.yaml',
+  'serverless.json',
+  'serverless.js',
+  'serverless.component.yml',
+  'serverless.component.yaml',
+  'serverless.component.json'
+]
+
+const isProjectPath = async (inputPath) => {
+  for (const configurationFile of possibleConfigurationFiles) {
+    if (await fse.pathExists(path.join(inputPath, configurationFile))) {
+      return true
+    }
+  }
+  return false
+}
+
 const IS_IN_CHINA = (() => {
   if (process.env.SLS_GEO_LOCATION === 'cn') {
     return true
@@ -370,5 +389,6 @@ module.exports = {
   getInstanceDashboardUrl,
   legacyLoadComponentConfig,
   legacyLoadInstanceConfig,
+  isProjectPath,
   IS_IN_CHINA
 }

@@ -2,11 +2,17 @@
  * Serverless Components: CLI Handler
  */
 
-const args = require('minimist')(process.argv.slice(2))
 const CLI = require('./CLI')
 const commands = require('./commands')
+const { isProjectPath, IS_IN_CHINA } = require('./utils')
 
 module.exports = async () => {
+  if (process.argv.length === 2 && IS_IN_CHINA && !(await isProjectPath(process.cwd()))) {
+    // Interactive onboarding
+    return require('./interactive-onboarding/cn')()
+  }
+
+  const args = require('minimist')(process.argv.slice(2))
   const command = args._[0] || 'deploy'
   const params = []
   if (args._[1]) {

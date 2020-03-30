@@ -15,7 +15,9 @@ const runningComponents = () => {
   } catch (e) {}
 
   if (!componentConfig && !instanceConfig) {
-    return false
+    // When no in service context and plain `serverless` command, return true when user in China
+    // It's to enable interactive CLI components onboarding for Chinese users
+    return process.argv.length === 2 && utils.IS_IN_CHINA
   }
 
   if (instanceConfig && !instanceConfig.component) {
